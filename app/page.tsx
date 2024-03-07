@@ -7,12 +7,72 @@ import { Children } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import rehypeHighlight from 'rehype-highlight';
+import "./styles/highlight-js/github-dark.css";
+// import "@/styles/highlight-js/github-dark.css"
 
 interface HomeProps {
   children: React.ReactNode;
 }
 
+const options = {
+  mdxOptions: {
+      remarkPlugins: [],
+      rehypePlugins: [rehypeHighlight],
+  }
+}
+
 export default function Home({ children }: HomeProps) {
+
+  const markdown = `
+  
+  You can also use HTML to embed cards in a grid.
+
+  I **love** using [Next.js](https://nextjs.org/)
+
+\`\`\`mdx
+<div className="grid grid-cols-2 gap-4">
+  <Card href="#">
+    #### Card One 
+    You can use **markdown** inside cards.
+  </Card>
+
+  <Card href="#">
+    #### Card Two 
+    You can also use \`inline code\` and code blocks.
+  </Card>
+</div>
+\`\`\`
+
+
+
+---
+
+## Custom Components
+
+You can add your own custom components using the \`components\` props from \`useMDXComponent\`.
+
+\`\`\`ts title="components/mdx.tsx" {2,6}
+import { Callout } from "@/components/callout"
+import { CustomComponent } from "@/components/custom"
+
+const components = {
+  Callout,
+  CustomComponent,
+}
+
+\`\`\`
+
+
+\`\`\`js
+const year = "2001";
+const movie = "Shrek";
+
+console.log(\`\${movie}, \${year}\`);
+
+  `;
+
   return (
     <>
       <div className="flex min-h-screen flex-col">
@@ -70,7 +130,10 @@ export default function Home({ children }: HomeProps) {
                     </div>
 
                     <div className="lg:mt-[21px] h-[calc(100vh-13rem-220px)] lg:h-[calc(100vh-12.5rem)] min-h-[400px] rounded-md border bg-muted lg:min-h-[400px] p-6 overflow-y-auto">
-                      
+                    {/* <p className="text-sm text-muted-foreground"> */}
+                    <MDXRemote source={markdown} components={{Button}} options={options}/>
+                    {/* </p> */}
+
                     <div className="grid gap-4">
           <div className="rounded-md bg-black p-6">
             <pre>
